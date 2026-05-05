@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Royal Flush Casino — Ember Link Deluxe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --text-xs: clamp(0.75rem, 0.72rem + 0.2vw, 0.875rem);
+      --text-sm: clamp(0.875rem, 0.82rem + 0.24vw, 1rem);
+      --text-base: clamp(1rem, 0.95rem + 0.28vw, 1.125rem);
+      --text-lg: clamp(1.125rem, 1.02rem + 0.55vw, 1.45rem);
+      --text-xl: clamp(1.5rem, 1.2rem + 1vw, 2.1rem);
+      --text-2xl: clamp(2rem, 1.35rem + 2.1vw, 3.3rem);
+      --space-1: .25rem; --space-2: .5rem; --space-3: .75rem; --space-4: 1rem; --space-5: 1.25rem; --space-6: 1.5rem; --space-8: 2rem; --space-10: 2.5rem; --space-12: 3rem;
+      --radius-sm: .5rem; --radius-md: .875rem; --radius-lg: 1.125rem; --radius-xl: 1.5rem; --radius-full: 999px;
+      --bg: #0f0b08; --bg-2:#15100c; --surface:#18120d; --surface-2:#221911; --surface-3:#2a1f15; --border:#4b3622;
+      --text:#f7ebd0; --muted:#c0ab86; --faint:#8f7c60; --gold:#e4b54f; --gold-2:#ffd98a; --teal:#1f7f85; --teal-2:#59a7ac; --red:#c24a5f;
+      --shadow-sm:0 4px 12px rgba(0,0,0,.24); --shadow-md:0 18px 50px rgba(0,0,0,.45);
+      --font-display:'Cinzel', Georgia, serif; --font-body:'Inter', sans-serif;
+    }
+    *{box-sizing:border-box} html,body{margin:0;padding:0} body{
+      font-family:var(--font-body); color:var(--text); background:
+      radial-gradient(circle at 10% 0%, rgba(228,181,79,.16), transparent 26%),
+      radial-gradient(circle at 100% 100%, rgba(31,127,133,.14), transparent 24%),
+      linear-gradient(180deg, #1b140e 0%, var(--bg) 45%, #0c0907 100%);
+      min-height:100vh; line-height:1.5;
+    }
+    a{text-decoration:none;color:inherit} button{font:inherit;cursor:pointer}
+    .shell{max-width:1320px;margin:0 auto;padding:var(--space-6)}
+    .topbar,.subbar{display:flex;justify-content:space-between;align-items:center;gap:var(--space-4)}
+    .topbar{padding:var(--space-3) 0 var(--space-4);border-bottom:1px solid rgba(255,216,142,.08)}
+    .brand{display:flex;align-items:center;gap:var(--space-3)}
+    .crest{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%, #f9de98, #a56f1f 60%, #5f3b11 100%);box-shadow:0 0 20px rgba(228,181,79,.25), inset 0 0 10px rgba(255,255,255,.16)}
+    .crest svg{width:32px;height:32px;color:#281505}
+    .brand-name{font-family:var(--font-display);font-size:var(--text-xl);letter-spacing:.05em}
+    .brand-tag{font-size:var(--text-xs);color:var(--muted);text-transform:uppercase;letter-spacing:.14em}
+    .nav{display:flex;gap:var(--space-4);font-size:var(--text-sm);color:var(--muted)}
+    .nav a{padding:var(--space-2) 0}.nav a.active{color:var(--gold)}
+    .cta-mini{padding:var(--space-2) var(--space-4);border-radius:var(--radius-full);border:1px solid rgba(255,217,138,.18);background:rgba(255,217,138,.08);color:var(--gold-2);font-size:var(--text-sm)}
+    .subbar{padding:var(--space-4) 0 var(--space-6)}
+    .headline h1{margin:0;font-family:var(--font-display);font-size:var(--text-2xl);line-height:1.03;max-width:12ch}
+    .headline p{margin:var(--space-2) 0 0;color:var(--muted);max-width:56ch}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-3);min-width:min(100%,440px)}
+    .stat{padding:var(--space-4);border-radius:var(--radius-lg);background:linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.012));border:1px solid rgba(255,216,142,.1)}
+    .stat strong{display:block;font-size:var(--text-lg);color:var(--gold-2)} .stat span{display:block;font-size:var(--text-xs);color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+
+    .layout{display:grid;grid-template-columns:1.65fr .85fr;gap:var(--space-6)}
+    .panel{background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));border:1px solid rgba(255,216,142,.1);border-radius:var(--radius-xl);box-shadow:var(--shadow-md)}
+    .main-panel{padding:var(--space-5)}
+    .jackpot-row{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-3);margin-bottom:var(--space-4)}
+    .jackpot{padding:var(--space-3);border-radius:var(--radius-lg);background:linear-gradient(180deg, rgba(228,181,79,.12), rgba(0,0,0,.15));border:1px solid rgba(255,216,142,.14);text-align:center}
+    .jackpot strong{display:block;font-size:var(--text-xs);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+    .jackpot span{display:block;font-size:var(--text-lg);font-weight:800;color:var(--gold-2);margin-top:4px}
+    .machine-shell{position:relative;padding:var(--space-4);border-radius:32px;background:linear-gradient(180deg,#5d3515 0%, #26170c 18%, #140d08 100%);border:1px solid rgba(255,225,154,.2);box-shadow:inset 0 0 0 2px rgba(255,255,255,.05), inset 0 18px 36px rgba(255,255,255,.03), 0 20px 40px rgba(0,0,0,.35)}
+    .machine-shell::before,.machine-shell::after{content:"";position:absolute;top:16px;bottom:16px;width:11px;border-radius:999px;background:linear-gradient(180deg,#ffd88a,#a96d1a 52%,#633f12)}
+    .machine-shell::before{left:12px}.machine-shell::after{right:12px}
+    .machine-screen{padding:var(--space-4);border-radius:24px;background:radial-gradient(circle at top, rgba(255,216,142,.12), transparent 26%), linear-gradient(180deg,#1d140e,#0f0a07 100%);border:1px solid rgba(255,225,154,.12)}
+    .reel-top{display:flex;justify-content:space-between;align-items:center;gap:var(--space-4);margin-bottom:var(--space-4)}
+    .mode-pill{padding:var(--space-2) var(--space-3);border-radius:var(--radius-full);background:rgba(31,127,133,.18);border:1px solid rgba(89,167,172,.24);font-size:var(--text-xs);letter-spacing:.08em;text-transform:uppercase;color:#9dd6d9}
+    .reels{display:grid;grid-template-columns:repeat(5,1fr);gap:var(--space-3)}
+    .reel{display:grid;grid-template-rows:repeat(3,1fr);gap:var(--space-3)}
+    .symbol{min-height:126px;border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(180deg, rgba(255,251,240,.13), rgba(105,50,12,.22));border:1px solid rgba(255,224,154,.12);position:relative;overflow:hidden;transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease}
+    .symbol::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg, rgba(255,255,255,.14), transparent 38%, transparent 62%, rgba(255,255,255,.04))}
+    .symbol .glyph{font-size:2.4rem;filter:drop-shadow(0 3px 10px rgba(0,0,0,.28))}
+    .symbol .label{margin-top:6px;font-size:var(--text-xs);text-transform:uppercase;letter-spacing:.08em;color:#f8ecd0}
+    .symbol.orb{background:radial-gradient(circle at 35% 28%, rgba(255,226,150,.3), rgba(171,63,12,.42) 55%, rgba(71,14,5,.7));border-color:rgba(255,217,138,.5);box-shadow:0 0 18px rgba(255,181,60,.2), inset 0 1px 0 rgba(255,255,255,.16)}
+    .symbol.win{border-color:#ffd674;box-shadow:0 0 0 1px rgba(255,214,116,.52),0 0 22px rgba(255,184,67,.2), inset 0 0 18px rgba(255,244,215,.08);transform:translateY(-1px)}
+    .symbol.mega{animation:pulse 1s infinite}
+    .hud{display:grid;grid-template-columns:repeat(6,1fr);gap:var(--space-3);margin-top:var(--space-4)}
+    .hud-card{padding:var(--space-3);border-radius:var(--radius-lg);background:rgba(255,255,255,.03);border:1px solid rgba(255,216,142,.08)}
+    .hud-card small{display:block;font-size:var(--text-xs);text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+    .hud-card strong{display:block;margin-top:4px;font-size:var(--text-lg)}
+    .controls{display:grid;grid-template-columns:1fr 1.2fr 1fr 1fr;gap:var(--space-3);margin-top:var(--space-4)}
+    .btn{min-height:54px;border:none;border-radius:var(--radius-lg);padding:0 var(--space-4);font-weight:800;letter-spacing:.03em;color:var(--text);background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.08);transition:transform .18s ease, filter .18s ease}
+    .btn:hover{transform:translateY(-1px);filter:brightness(1.06)} .btn:active{transform:translateY(1px)} .btn:disabled{opacity:.55;cursor:not-allowed}
+    .btn.gold{background:linear-gradient(180deg,#f4d489,#ba8226);color:#251205;border:1px solid #ffd98a;box-shadow:0 10px 20px rgba(228,181,79,.2)}
+    .btn.teal{background:linear-gradient(180deg,#1f8f96,#10555a);border:1px solid #54b1b6}
+    .btn.red{background:linear-gradient(180deg,#b14a5d,#6f2632);border:1px solid #d26b7d}
+
+    .side-panel{padding:var(--space-5);display:flex;flex-direction:column;gap:var(--space-4)}
+    .card{padding:var(--space-4);border-radius:var(--radius-lg);background:rgba(255,255,255,.03);border:1px solid rgba(255,216,142,.08)}
+    .card h3{margin:0 0 var(--space-2);font-family:var(--font-display);font-size:var(--text-lg)}
+    .meter-line{display:flex;justify-content:space-between;gap:var(--space-3);font-size:var(--text-sm);margin:0 0 6px}
+    .track{height:12px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.04);overflow:hidden}
+    .fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#f4d181,#bd7d20);transition:width .25s ease}
+    .fill.teal{background:linear-gradient(90deg,#5ab3b7,#1f7f85)}
+    .feature-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-3)}
+    .feature{display:flex;gap:var(--space-3);align-items:center;padding:var(--space-2);border-radius:var(--radius-md);background:rgba(255,255,255,.02)}
+    .feature .icon{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(180deg, rgba(255,251,240,.12), rgba(105,50,12,.22));border:1px solid rgba(255,224,154,.12);font-size:1.3rem}
+    .feature strong{display:block;font-size:var(--text-sm)} .feature span{display:block;font-size:var(--text-xs);color:var(--muted)}
+    .feed{max-height:250px;overflow:auto;padding-right:4px}.feed p{margin:0 0 var(--space-2);font-size:var(--text-sm);color:#ebddbf}
+    .paytable{display:grid;gap:var(--space-2)} .payrow{display:flex;justify-content:space-between;gap:var(--space-3);font-size:var(--text-sm);padding:var(--space-2) 0;border-bottom:1px solid rgba(255,216,142,.06)}
+    .toggle{display:flex;gap:var(--space-2);flex-wrap:wrap}
+    .toggle button{min-height:42px;padding:0 var(--space-3);border-radius:var(--radius-full);background:rgba(255,255,255,.04);color:var(--muted);border:1px solid rgba(255,255,255,.08)}
+    .toggle button.active{background:rgba(255,217,138,.12);color:var(--gold-2);border-color:rgba(255,217,138,.22)}
+
+    .overlay{position:fixed;inset:0;background:rgba(7,4,2,.78);display:none;align-items:center;justify-content:center;padding:var(--space-4);z-index:40}
+    .overlay.show{display:flex}
+    .modal{max-width:720px;width:100%;padding:var(--space-6);border-radius:28px;background:linear-gradient(180deg,#3d210d,#160d07);border:1px solid rgba(255,216,142,.28);box-shadow:0 28px 70px rgba(0,0,0,.55);text-align:center}
+    .modal h2{margin:0 0 var(--space-2);font-family:var(--font-display);font-size:var(--text-2xl);color:var(--gold-2)}
+    .modal p{margin:0 0 var(--space-4);color:#f0ddbf}
+    .bonus-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:var(--space-2);margin:var(--space-4) 0}
+    .orbcell{aspect-ratio:1;border-radius:16px;display:grid;place-items:center;font-weight:800;background:radial-gradient(circle at 35% 30%, #ffd98d, #dc7f1f 52%, #7a1d09 100%);color:#240f05;box-shadow:0 0 18px rgba(255,183,56,.22)}
+    .mute-note{font-size:var(--text-xs);color:var(--muted)}
+    .hidden-audio{display:none}
+    @keyframes pulse{0%,100%{transform:scale(1);box-shadow:0 0 10px rgba(255,196,89,.2)}50%{transform:scale(1.04);box-shadow:0 0 24px rgba(255,196,89,.35)}}
+    @media (max-width:1100px){.layout{grid-template-columns:1fr}.subbar{flex-direction:column;align-items:flex-start}.stats{min-width:0;width:100%}}
+    @media (max-width:760px){
+      .shell{padding:var(--space-4)} .topbar{flex-direction:column;align-items:flex-start}.nav{flex-wrap:wrap}.headline h1{max-width:none}
+      .jackpot-row{grid-template-columns:repeat(2,1fr)} .reels{gap:8px} .reel{gap:8px} .symbol{min-height:88px}.symbol .glyph{font-size:1.6rem}
+      .hud{grid-template-columns:repeat(2,1fr)} .controls{grid-template-columns:1fr 1fr} .feature-grid{grid-template-columns:1fr} .stats{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="crest" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2l2.1 4.3L19 7l-3.5 3.3.9 4.7L12 12.8 7.6 15l.9-4.7L5 7l4.9-.7L12 2Z"></path><path d="M6 18h12"></path><path d="M8 22h8"></path>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-name">Royal Flush Casino</div>
+          <div class="brand-tag">Games of Skill & Fortune</div>
+        </div>
+      </div>
+      <nav class="nav" aria-label="Primary">
+        <a href="#">Games</a>
+        <a href="#">Promotions</a>
+        <a href="#">VIP Club</a>
+        <a href="#" class="active">Slots</a>
+      </nav>
+      <div class="cta-mini">Ember Link Deluxe • Live Prototype</div>
+    </header>
+
+    <section class="subbar">
+      <div class="headline">
+        <h1>Where fire locks in and fortune surges.</h1>
+        <p>This next version is designed to feel closer to the Royal Flush landing page, with a more integrated lobby-style header, richer control panel, a stronger bonus presentation, optional sound, and a cleaner premium cabinet look.</p>
+      </div>
+      <div class="stats">
+        <div class="stat"><strong>5x3</strong><span>Reel layout</span></div>
+        <div class="stat"><strong>6+</strong><span>Fire orbs for Hold & Spin</span></div>
+        <div class="stat"><strong>4 Tiers</strong><span>Mini • Minor • Major • Grand</span></div>
+      </div>
+    </section>
+
+    <main class="layout">
+      <section class="panel main-panel">
+        <div class="jackpot-row">
+          <div class="jackpot"><strong>Mini</strong><span id="jpMini">150</span></div>
+          <div class="jackpot"><strong>Minor</strong><span id="jpMinor">500</span></div>
+          <div class="jackpot"><strong>Major</strong><span id="jpMajor">2500</span></div>
+          <div class="jackpot"><strong>Grand</strong><span id="jpGrand">15000</span></div>
+        </div>
+
+        <div class="machine-shell">
+          <div class="machine-screen">
+            <div class="reel-top">
+              <div>
+                <div class="brand-tag">Royal Flush Feature Slot</div>
+                <div style="font-family:var(--font-display);font-size:var(--text-xl);">Ember Link Deluxe</div>
+              </div>
+              <div class="mode-pill" id="modePill">Base Game</div>
+            </div>
+
+            <div class="reels" id="reels"></div>
+
+            <div class="hud">
+              <div class="hud-card"><small>Credits</small><strong id="credits">3000</strong></div>
+              <div class="hud-card"><small>Bet</small><strong id="bet">25</strong></div>
+              <div class="hud-card"><small>Last Win</small><strong id="lastWin">0</strong></div>
+              <div class="hud-card"><small>Orbs</small><strong id="orbCount">0</strong></div>
+              <div class="hud-card"><small>Free Spins</small><strong id="freeSpins">0</strong></div>
+              <div class="hud-card"><small>Total Won</small><strong id="totalWon">0</strong></div>
+            </div>
+
+            <div class="controls">
+              <button class="btn" id="betDown">Bet -</button>
+              <button class="btn gold" id="spinBtn">Spin</button>
+              <button class="btn teal" id="autoBtn">Auto 10</button>
+              <button class="btn red" id="soundBtn">Sound Off</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="panel side-panel">
+        <section class="card">
+          <h3>Session meters</h3>
+          <p class="meter-line"><span>Grand chase</span><strong id="grandText">0%</strong></p>
+          <div class="track"><div class="fill" id="grandFill" style="width:0%"></div></div>
+          <p class="meter-line" style="margin-top:var(--space-3)"><span>Feature heat</span><strong id="heatText">Cool</strong></p>
+          <div class="track"><div class="fill teal" id="heatFill" style="width:10%"></div></div>
+          <p class="meter-line" style="margin-top:var(--space-3)"><span>Volatility</span><strong id="volText">Balanced</strong></p>
+          <div class="toggle" id="volatilityToggle">
+            <button data-vol="low">Low</button>
+            <button data-vol="balanced" class="active">Balanced</button>
+            <button data-vol="high">High</button>
+          </div>
+        </section>
+
+        <section class="card">
+          <h3>Feature set</h3>
+          <div class="feature-grid">
+            <div class="feature"><div class="icon">🔥</div><div><strong>Hold & Spin</strong><span>6+ orbs lock and respin</span></div></div>
+            <div class="feature"><div class="icon">🐉</div><div><strong>Dragon Surge</strong><span>3+ dragons can grant free spins</span></div></div>
+            <div class="feature"><div class="icon">👑</div><div><strong>Royal wins</strong><span>Premium symbols pay heavier</span></div></div>
+            <div class="feature"><div class="icon">🔊</div><div><strong>Optional sound</strong><span>Built-in procedural tones</span></div></div>
+          </div>
+        </section>
+
+        <section class="card">
+          <h3>Pay guide</h3>
+          <div class="paytable">
+            <div class="payrow"><span>Dragon 3 / 4 / 5</span><strong>120 / 240 / 480</strong></div>
+            <div class="payrow"><span>Crown 3 / 4 / 5</span><strong>90 / 180 / 360</strong></div>
+            <div class="payrow"><span>Coin 3 / 4 / 5</span><strong>70 / 140 / 280</strong></div>
+            <div class="payrow"><span>Lantern 3 / 4 / 5</span><strong>55 / 110 / 220</strong></div>
+            <div class="payrow"><span>Fire Orbs</span><strong>Bonus feature</strong></div>
+          </div>
+        </section>
+
+        <section class="card">
+          <h3>Game feed</h3>
+          <div class="feed" id="feed"></div>
+          <div class="mute-note">This version keeps the broad hold-and-spin style but uses original symbols, naming, values, and presentation.</div>
+        </section>
+      </aside>
+    </main>
+  </div>
+
+  <div class="overlay" id="bonusOverlay" aria-hidden="true">
+    <div class="modal">
+      <h2>Inferno Hold & Spin</h2>
+      <p>Locked fire orbs reset the respin counter to 3 whenever new orbs land. Jackpot orbs can appear during the feature.</p>
+      <div class="bonus-grid" id="bonusGrid"></div>
+      <button class="btn gold" id="bonusClose">Continue</button>
+    </div>
+  </div>
+
+  <script>
+    const defs = {
+      dragon:{icon:'🐉',label:'Dragon',base:120},
+      crown:{icon:'👑',label:'Crown',base:90},
+      coin:{icon:'🪙',label:'Coin',base:70},
+      lantern:{icon:'🏮',label:'Lantern',base:55},
+      jade:{icon:'💠',label:'Jade',base:45},
+      A:{icon:'A',label:'Ace',base:20},
+      K:{icon:'K',label:'King',base:18},
+      Q:{icon:'Q',label:'Queen',base:16},
+      J:{icon:'J',label:'Jack',base:14},
+      orb:{icon:'🔥',label:'Fire Orb',base:0,special:true}
+    };
+
+    const pools = {
+      low:['dragon','crown','coin','lantern','jade','A','K','Q','J','dragon','crown','coin','lantern','jade','A','K','Q','J','coin','lantern','orb','orb'],
+      balanced:['dragon','crown','coin','lantern','jade','A','K','Q','J','dragon','crown','coin','lantern','jade','A','K','Q','J','coin','lantern','jade','A','orb'],
+      high:['dragon','crown','coin','lantern','jade','A','K','Q','J','dragon','crown','coin','lantern','jade','A','K','Q','J','coin','orb']
+    };
+
+    const state = {
+      credits:3000,
+      bets:[10,25,50,75,100],
+      betIndex:1,
+      lastWin:0,
+      totalWon:0,
+      freeSpins:0,
+      board:[],
+      spinning:false,
+      auto:0,
+      sound:false,
+      volatility:'balanced',
+      heat:10,
+      grand:0,
+      jackpots:{mini:150,minor:500,major:2500,grand:15000},
+      mode:'Base Game'
+    };
+
+    const $ = id => document.getElementById(id);
+    const reelsEl = $('reels');
+    const feed = $('feed');
+    const modePill = $('modePill');
+    const audioCtxHolder = { ctx:null };
+
+    function fmt(n){ return Math.round(n).toLocaleString(); }
+    function bet(){ return state.bets[state.betIndex]; }
+    function sample(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+    function sym(id){ return { id, ...defs[id] }; }
+
+    function log(msg){
+      const p = document.createElement('p');
+      p.textContent = msg;
+      feed.prepend(p);
+      while(feed.children.length > 14) feed.removeChild(feed.lastChild);
+    }
+
+    function updateHud(){
+      $('credits').textContent = fmt(state.credits);
+      $('bet').textContent = fmt(bet());
+      $('lastWin').textContent = fmt(state.lastWin);
+      $('orbCount').textContent = state.board.flat().filter(s => s.id === 'orb').length;
+      $('freeSpins').textContent = fmt(state.freeSpins);
+      $('totalWon').textContent = fmt(state.totalWon);
+      $('jpMini').textContent = fmt(state.jackpots.mini);
+      $('jpMinor').textContent = fmt(state.jackpots.minor);
+      $('jpMajor').textContent = fmt(state.jackpots.major);
+      $('jpGrand').textContent = fmt(state.jackpots.grand);
+      $('grandFill').style.width = `${state.grand}%`;
+      $('grandText').textContent = `${Math.round(state.grand)}%`;
+      $('heatFill').style.width = `${state.heat}%`;
+      $('heatText').textContent = state.heat > 75 ? 'Blazing' : state.heat > 40 ? 'Warm' : 'Cool';
+      $('volText').textContent = state.volatility[0].toUpperCase() + state.volatility.slice(1);
+      modePill.textContent = state.mode;
+      $('spinBtn').textContent = state.freeSpins > 0 ? `Spin Free (${state.freeSpins})` : 'Spin';
+      $('autoBtn').textContent = state.auto > 0 ? `Auto ${state.auto}` : 'Auto 10';
+      $('soundBtn').textContent = state.sound ? 'Sound On' : 'Sound Off';
+    }
+
+    function draw(board, wins=[]){
+      reelsEl.innerHTML = '';
+      board.forEach((reel,c)=>{
+        const reelEl = document.createElement('div'); reelEl.className = 'reel';
+        reel.forEach((s,r)=>{
+          const div = document.createElement('div');
+          const hit = wins.some(([wc,wr])=>wc===c&&wr===r);
+          div.className = `symbol ${s.id==='orb'?'orb':''} ${hit?'win':''}`.trim();
+          div.innerHTML = `<div class="glyph">${s.icon}</div><div class="label">${s.label}</div>`;
+          reelEl.appendChild(div);
+        });
+        reelsEl.appendChild(reelEl);
+      });
+      state.board = board;
+      updateHud();
+    }
+
+    function board(){
+      const pool = pools[state.volatility];
+      return Array.from({length:5},()=>Array.from({length:3},()=>sym(sample(pool))));
+    }
+
+    function lineWins(b){
+      const lines = [[0,0,0,0,0],[1,1,1,1,1],[2,2,2,2,2]];
+      let total = 0; const hits = [];
+      lines.forEach((line, idx)=>{
+        const first = b[0][line[0]]; if(first.id==='orb') return;
+        let count = 1;
+        for(let c=1;c<5;c++){ if(b[c][line[c]].id===first.id) count++; else break; }
+        if(count >= 3){
+          const mult = count===3?1:count===4?2:4;
+          const win = first.base * mult * (bet()/25);
+          total += win;
+          for(let c=0;c<count;c++) hits.push([c,line[c]]);
+          log(`${first.label} line on row ${idx+1} pays ${fmt(win)}.`);
+        }
+      });
+      return { total, hits };
+    }
+
+    function orbPrize(){
+      const roll = Math.random(); const b = bet();
+      if(state.volatility === 'low'){
+        if(roll < .72) return Math.floor(b * (1 + Math.random()*3));
+        if(roll < .94) return Math.floor(b * (4 + Math.random()*7));
+        if(roll < .985) return {jackpot:'mini', value:state.jackpots.mini};
+        if(roll < .998) return {jackpot:'minor', value:state.jackpots.minor};
+        return {jackpot:'major', value:state.jackpots.major};
+      }
+      if(state.volatility === 'high'){
+        if(roll < .48) return Math.floor(b * (1 + Math.random()*5));
+        if(roll < .82) return Math.floor(b * (6 + Math.random()*14));
+        if(roll < .95) return {jackpot:'mini', value:state.jackpots.mini};
+        if(roll < .988) return {jackpot:'minor', value:state.jackpots.minor};
+        if(roll < .998) return {jackpot:'major', value:state.jackpots.major};
+        return {jackpot:'grand', value:state.jackpots.grand};
+      }
+      if(roll < .60) return Math.floor(b * (1 + Math.random()*4));
+      if(roll < .89) return Math.floor(b * (5 + Math.random()*10));
+      if(roll < .965) return {jackpot:'mini', value:state.jackpots.mini};
+      if(roll < .992) return {jackpot:'minor', value:state.jackpots.minor};
+      if(roll < .9985) return {jackpot:'major', value:state.jackpots.major};
+      return {jackpot:'grand', value:state.jackpots.grand};
+    }
+
+    function tone(freq=440, duration=.08, type='sine', volume=.03){
+      if(!state.sound) return;
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if(!AC) return;
+      if(!audioCtxHolder.ctx) audioCtxHolder.ctx = new AC();
+      const ctx = audioCtxHolder.ctx;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = type; osc.frequency.value = freq;
+      gain.gain.value = volume;
+      osc.connect(gain); gain.connect(ctx.destination);
+      const now = ctx.currentTime;
+      gain.gain.setValueAtTime(volume, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+      osc.start(now); osc.stop(now + duration);
+    }
+
+    function playHoldAndSpin(startBoard){
+      state.mode = 'Hold & Spin'; updateHud();
+      const cells = Array.from({length:15}, (_,i)=>({ prize:null, locked:false, index:i }));
+      startBoard.flat().forEach((s,i)=>{ if(s.id==='orb'){ cells[i].prize = orbPrize(); cells[i].locked = true; } });
+      let respins = 3;
+      while(respins > 0 && cells.some(c=>!c.locked)){
+        let gained = 0;
+        cells.forEach(cell=>{
+          const chance = state.volatility === 'low' ? .26 : state.volatility === 'high' ? .18 : .22;
+          if(!cell.locked && Math.random() < chance){ cell.prize = orbPrize(); cell.locked = true; gained++; }
+        });
+        if(gained > 0){ respins = 3; tone(740,.08,'triangle',.035); }
+        else respins--;
+      }
+      $('bonusGrid').innerHTML = '';
+      let total = 0;
+      cells.forEach(cell=>{
+        const d = document.createElement('div'); d.className = 'orbcell';
+        if(cell.locked){
+          if(typeof cell.prize === 'number'){ d.textContent = fmt(cell.prize); total += cell.prize; }
+          else { d.textContent = cell.prize.jackpot.toUpperCase(); total += cell.prize.value; }
+        } else { d.textContent = '·'; d.style.opacity = '.25'; }
+        $('bonusGrid').appendChild(d);
+      });
+      if(cells.every(c=>c.locked)){
+        total += state.jackpots.major;
+        log(`Full inferno grid adds Major prize ${fmt(state.jackpots.major)}.`);
+      }
+      $('bonusOverlay').classList.add('show');
+      state.grand = Math.min(100, state.grand + 14 + Math.random()*16);
+      state.heat = Math.min(100, state.heat + 26);
+      tone(880,.22,'sawtooth',.045);
+      log(`Inferno Hold & Spin pays ${fmt(total)}.`);
+      return total;
+    }
+
+    function dragonFeature(b){
+      const dragons = b.flat().filter(s=>s.id==='dragon').length;
+      const orbCount = b.flat().filter(s=>s.id==='orb').length;
+      if(dragons >= 3 && orbCount < 6 && Math.random() < .34){
+        const award = dragons >= 5 ? 8 : 5;
+        state.freeSpins += award;
+        state.heat = Math.min(100, state.heat + 14);
+        tone(620,.12,'triangle',.03);
+        log(`Dragon Surge awards ${award} free spins.`);
+      }
+    }
+
+    async function spin(){
+      if(state.spinning) return;
+      const cost = bet();
+      if(state.freeSpins === 0 && state.credits < cost){ log('Not enough credits for that bet.'); return; }
+      state.spinning = true;
+      $('spinBtn').disabled = true; $('autoBtn').disabled = true;
+      state.mode = state.freeSpins > 0 ? 'Free Spins' : 'Base Game'; updateHud();
+
+      if(state.freeSpins > 0){ state.freeSpins--; }
+      else state.credits -= cost;
+
+      for(let i=0;i<8;i++){
+        draw(board()); tone(240 + i*45, .03, 'square', .015);
+        await new Promise(r=>setTimeout(r, 65 + i*18));
+      }
+
+      const final = board();
+      const lw = lineWins(final);
+      draw(final, lw.hits);
+      let total = lw.total;
+      const orbCount = final.flat().filter(s=>s.id==='orb').length;
+      if(orbCount >= 6){ total += playHoldAndSpin(final); }
+      else dragonFeature(final);
+      state.lastWin = total;
+      state.totalWon += total;
+      if(total > 0){ state.credits += total; tone(520,.08,'triangle',.03); }
+      else { log('No line hit this spin.'); state.heat = Math.max(8, state.heat - 5 + Math.random()*4); }
+      state.grand = Math.max(0, Math.min(100, state.grand - 1 + Math.random()*2));
+      state.mode = state.freeSpins > 0 ? 'Free Spins' : 'Base Game';
+      state.spinning = false;
+      $('spinBtn').disabled = false; $('autoBtn').disabled = false;
+      updateHud();
+
+      if(state.auto > 0){ state.auto--; updateHud(); setTimeout(spin, 500); }
+    }
+
+    $('betDown').addEventListener('click', ()=>{ if(state.spinning) return; state.betIndex = Math.max(0, state.betIndex-1); updateHud(); });
+    $('spinBtn').addEventListener('click', spin);
+    $('autoBtn').addEventListener('click', ()=>{ if(state.spinning) return; state.auto = state.auto > 0 ? 0 : 10; updateHud(); if(state.auto > 0) spin(); });
+    $('soundBtn').addEventListener('click', async ()=>{ state.sound = !state.sound; if(state.sound){ try { const AC = window.AudioContext || window.webkitAudioContext; if(AC && !audioCtxHolder.ctx) audioCtxHolder.ctx = new AC(); if(audioCtxHolder.ctx?.state === 'suspended') await audioCtxHolder.ctx.resume(); tone(440,.08,'sine',.03); } catch(e){} } updateHud(); });
+    $('bonusClose').addEventListener('click', ()=>{ $('bonusOverlay').classList.remove('show'); updateHud(); });
+    document.querySelectorAll('#volatilityToggle button').forEach(btn=>btn.addEventListener('click', ()=>{
+      document.querySelectorAll('#volatilityToggle button').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active'); state.volatility = btn.dataset.vol; updateHud(); log(`Volatility set to ${state.volatility}.`);
+    }));
+    document.addEventListener('keydown', e=>{ if(e.code === 'Space'){ e.preventDefault(); spin(); } });
+
+    draw(board());
+    updateHud();
+    log('Ember Link Deluxe loaded. Press Spin to begin.');
+    log('Landing 6 or more fire orbs triggers Inferno Hold & Spin.');
+  </script>
+</body>
+</html>
