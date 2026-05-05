@@ -808,6 +808,30 @@ function syncRaiseControl() {
   document.getElementById('callLabel').textContent = currency(toCall);
 }
 
+ function renderPlayers() {
+  state.players.forEach((player, index) => {
+    const seat = document.getElementById(`seat-${index}`);
+    const isUsersTurn = player.isUser && index === state.turnIndex && !player.folded && !player.allIn;
+
+    seat.classList.toggle('user', player.isUser);
+    seat.classList.toggle('active', index === state.turnIndex);
+    seat.classList.toggle('folded', player.folded);
+
+    seat.querySelector('.player-name').textContent = player.name;
+    seat.querySelector('.stack').textContent = currency(player.stack);
+    seat.querySelector('.last-action').textContent =
+      player.folded ? 'Folded'
+      : player.allIn ? 'All-In'
+      : isUsersTurn ? 'Your turn'
+      : player.lastAction;
+
+    const cards = seat.querySelector('.hole-cards');
+    cards.innerHTML = player.hand
+      .map(card => renderCard(card, !player.isUser && state.phase !== 'showdown' && !player.folded))
+      .join('');
+  });
+} 
+  
 function render(showAll = false) {
   document.getElementById('potValue').textContent = currency(state.pot);
   document.getElementById('blindLabel').textContent = `${state.smallBlind} / ${state.bigBlind}`;
