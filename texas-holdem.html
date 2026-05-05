@@ -477,6 +477,22 @@ function activePlayers() {
   return state.players.filter(p => !p.folded && (p.stack > 0 || p.bet > 0 || p.hand.length));
 }
 
+function updateActionButtons() {
+  const user = state.players[0];
+  const userCanAct = state.turnIndex === 0 && !user.folded && !user.allIn;
+  const toCall = Math.max(0, state.currentBet - user.bet);
+
+  document.getElementById('foldBtn').disabled = !userCanAct;
+  document.getElementById('checkBtn').disabled = !(userCanAct && toCall === 0);
+  document.getElementById('callBtn').disabled = !(userCanAct && toCall > 0);
+  document.getElementById('callBtn').textContent = toCall > 0 ? `Call ${currency(toCall)}` : 'Call';
+  document.getElementById('raiseBtn').disabled = !(userCanAct && user.stack > toCall);
+
+  if (userCanAct) {
+    user.lastAction = toCall > 0 ? 'Acting' : 'Your turn';
+  }
+}  
+  
 function resetBetsForRound() {
   state.players.forEach(p => p.bet = 0);
   state.currentBet = 0;
