@@ -580,13 +580,12 @@
 
     function resetBetsForStreet() {
       state.players.forEach(p => {
-        p.currentBet = 0);
+        p.currentBet = 0;
         p.actedThisStreet = false;
         p.lastAction = '';
       });
       state.currentBet = 0;
       state.minRaise = state.bigBlind;
-      state.lastAggressorInd
     }
 
     function dealCommunity(count) {
