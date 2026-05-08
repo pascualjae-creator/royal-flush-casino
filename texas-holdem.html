@@ -356,6 +356,7 @@
         currentBet: 0,
         totalCommitted: 0,
         lastAction: 'Waiting',
+        actedThisStreet: false,
         seatEl: null
       }));
     }
@@ -493,6 +494,7 @@
       player.allIn = false;
       player.currentBet = 0;
       player.totalCommitted = 0;
+      player.actedThisStreet = false;
       player.lastAction = player.chips <= 0 ? 'Busted' : 'Waiting';
     }
 
@@ -584,6 +586,7 @@
       });
       state.currentBet = 0;
       state.minRaise = state.bigBlind;
+      state.lastAggressorInd
     }
 
     function dealCommunity(count) {
