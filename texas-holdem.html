@@ -547,14 +547,22 @@
 
     function nextActiveIndex(start, includeCurrent = false) {
       let idx = includeCurrent ? start : (start + 1) % state.players.length;
-      for (let i=0;i<state.players.length;i++) {
+      
+      for (let i = 0; i < state.players.length; i++) {
         const player = state.players[idx];
-        if (!player.folded && (player.chips > 0 || player.currentBet > 0 || player.allIn) && player.hand.length) return idx;
+
+        const canAct =
+          !player.folded &&
+          !player.allIn &&
+          player.chips> 0;
+        if (canAct) return idx;
+
         idx = (idx + 1) % state.players.length;
       }
-      return start;
-    }
 
+      return -1;
+    }
+    
     function bettingRoundComplete() {
       const contenders = playersInHand().filter(p => !p.folded);
       const active = contenders.filter(p => !p.allIn && p.chips > 0);
