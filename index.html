@@ -583,15 +583,15 @@ a,button,[role="button"]{transition:color var(--transition),background var(--tra
       </article>
 
       <!-- ROULETTE -->
-      <article class="game-card" role="listitem" onclick="showToast('Roulette — Coming Soon!')" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')showToast('Roulette — Coming Soon!')" aria-label="Roulette — Coming Soon">
+      <article class="game-card" role="listitem" onclick="openGame('Roulette')" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')openGame('Roulette — Coming Soon!')" aria-label="Play Roulette">
         <div class="game-card-bg roulette"></div>
         <div class="coming-soon-overlay" aria-hidden="true">
-          <div class="coming-soon-text">Coming Soon</div>
-          <div class="coming-soon-sub">Stay tuned</div>
+          <div class="coming-soon-text">Live Now</div>
+          <div class="coming-soon-sub">Open table</div>
         </div>
         <div class="game-card-inner">
           <div class="game-card-content">
-            <span class="game-badge badge-soon">Coming Soon</span>
+            <span class="game-badge badge-live"><span class="sr-only">Status:</span>Live Now</span>
             <span class="game-suit blue" style="font-size:2rem;color:rgba(80,130,220,0.7)" aria-hidden="true">⚫</span>
             <h3 class="game-title">Roulette</h3>
             <p class="game-desc sm">Red or black. One spin changes everything.</p>
