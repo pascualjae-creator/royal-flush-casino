@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Royal Flush Roulette</title>
+  <style>
+    :root{
+      --bg:#101318;--panel:#181d25;--panel2:#222834;--text:#f5f7fb;--muted:#b5bfd1;
+      --gold:#d4af37;--red:#c94151;--green:#1b9a69;--border:rgba(255,255,255,.1)
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;font-family:Arial,sans-serif;background:radial-gradient(circle at top,#20283a,var(--bg) 55%);
+      color:var(--text);min-height:100vh;padding:24px;display:grid;place-items:center
+    }
+    .app{width:min(1100px,100%);display:grid;grid-template-columns:1.15fr .85fr;gap:20px}
+    .card{
+      background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));
+      border:1px solid var(--border);border-radius:18px;padding:20px;box-shadow:0 18px 50px rgba(0,0,0,.35)
+    }
+    .title{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
+    .badge{
+      background:rgba(27,154,105,.16);color:#81e2bb;border:1px solid rgba(129,226,187,.25);
+      padding:6px 10px;border-radius:999px;font-size:12px;letter-spacing:.08em;text-transform:uppercase
+    }
+    .pointer{
+      width:0;height:0;border-left:18px solid transparent;border-right:18px solid transparent;
+      border-top:34px solid var(--gold);margin:0 auto -14px;filter:drop-shadow(0 4px 8px rgba(0,0,0,.4));z-index:2
+    }
+    .wheel-wrap{display:grid;place-items:center;padding:10px 0 18px}
+    .wheel{
+      width:min(520px,90vw);aspect-ratio:1;border-radius:50%;border:10px solid #2b2f3a;position:relative;
+      box-shadow:inset 0 0 0 8px rgba(255,255,255,.04),0 12px 40px rgba(0,0,0,.35);
+      transition:transform 5s cubic-bezier(.12,.8,.18,1);
+      background:conic-gradient(
+        #1b9a69 0deg 9.73deg,#c94151 9.73deg 19.46deg,#111 19.46deg 29.19deg,#c94151 29.19deg 38.92deg,
+        #111 38.92deg 48.65deg,#c94151 48.65deg 58.38deg,#111 58.38deg 68.11deg,#c94151 68.11deg 77.84deg,
+        #111 77.84deg 87.57deg,#c94151 87.57deg 97.3deg,#111 97.3deg 107.03deg,#111 107.03deg 116.76deg,
+        #c94151 116.76deg 126.49deg,#111 126.49deg 136.22deg,#c94151 136.22deg 145.95deg,#111 145.95deg 155.68deg,
+        #c94151 155.68deg 165.41deg,#111 165.41deg 175.14deg,#c94151 175.14deg 184.87deg,#c94151 184.87deg 194.6deg,
+        #111 194.6deg 204.33deg,#c94151 204.33deg 214.06deg,#111 214.06deg 223.79deg,#c94151 223.79deg 233.52deg,
+        #111 233.52deg 243.25deg,#c94151 243.25deg 252.98deg,#111 252.98deg 262.71deg,#111 262.71deg 272.44deg,
+        #c94151 272.44deg 282.17deg,#111 282.17deg 291.9deg,#c94151 291.9deg 301.63deg,#111 301.63deg 311.36deg,
+        #c94151 311.36deg 321.09deg,#111 321.09deg 330.82deg,#c94151 330.82deg 340.55deg,#111 340.55deg 350.28deg,
+        #c94151 350.28deg 360deg
+      )
+    }
+    .wheel:after{
+      content:'';position:absolute;inset:24%;border-radius:50%;
+      background:radial-gradient(circle at 35% 35%,#3b4250,#161a22 70%);
+      border:5px solid rgba(255,255,255,.08)
+    }
+    .numbers{display:grid;grid-template-columns:repeat(12,1fr);gap:8px;margin-top:18px}
+    .num{border:1px solid var(--border);border-radius:10px;padding:10px 0;text-align:center;background:var(--panel2);font-weight:700}
+    .num.red{background:rgba(201,65,81,.18)}
+    .num.black{background:rgba(255,255,255,.06)}
+    .num.green{background:rgba(27,154,105,.2)}
+    .controls{display:grid;gap:14px}
+    .bank{font-size:28px;color:var(--gold);font-weight:700;margin-top:6px}
+    .chips{display:flex;flex-wrap:wrap;gap:10px}
+    .chip,button{
+      border:1px solid var(--border);background:var(--panel2);color:var(--text);
+      border-radius:12px;padding:12px 14px;font-size:15px
+    }
+    .chip{cursor:pointer}
+    .chip.active,.bet-btn.active{outline:2px solid var(--gold)}
+    .bets{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    .bet-btn{cursor:pointer;font-weight:700}
+    .bet-btn.red{background:rgba(201,65,81,.22)}
+    .bet-btn.black{background:rgba(255,255,255,.06)}
+    .bet-btn.green{background:rgba(27,154,105,.24)}
+    .spin{background:linear-gradient(180deg,#e0bb52,#b88918);color:#17140a;font-weight:800;cursor:pointer}
+    .spin:disabled{opacity:.55;cursor:not-allowed}
+    .result{font-size:18px;font-weight:700}
+    .log{min-height:84px;color:var(--muted);line-height:1.5}
+    @media(max-width:860px){
+      .app{grid-template-columns:1fr}
+      .numbers{grid-template-columns:repeat(6,1fr)}
+      .bets{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="card">
+      <div class="title">
+        <div>
+          <h1 style="margin:0">Roulette</h1>
+          <p style="color:var(--muted);margin:6px 0 0">European-style quick spin table</p>
+        </div>
+        <span class="badge">Live Now</span>
+      </div>
+      <div class="pointer"></div>
+      <div class="wheel-wrap"><div class="wheel" id="wheel"></div></div>
+      <div class="numbers" id="numbers"></div>
+    </section>
+
+    <aside class="card controls">
+      <div>
+        <p style="color:var(--muted);margin:0">Bankroll</p>
+        <div class="bank" id="bank">$1000</div>
+      </div>
+
+      <div>
+        <p style="color:var(--muted)">Select chip</p>
+        <div class="chips" id="chips"></div>
+      </div>
+
+      <div>
+        <p style="color:var(--muted)">Choose bet</p>
+        <div class="bets">
+          <button class="bet-btn red" data-bet="red">Red</button>
+          <button class="bet-btn black" data-bet="black">Black</button>
+          <button class="bet-btn green" data-bet="green">0</button>
+        </div>
+      </div>
+
+      <button class="spin" id="spinBtn">Spin Wheel</button>
+      <div class="result" id="result">Place a bet to begin.</div>
+      <div class="log" id="log">Payouts: Red/Black pay 2x total return, 0 pays 14x total return.</div>
+    </aside>
+  </main>
+
+  <script>
+    const rouletteOrder=[0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26];
+    const redNums=new Set([1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36]);
+
+    const bankEl=document.getElementById('bank');
+    const resultEl=document.getElementById('result');
+    const logEl=document.getElementById('log');
+    const wheelEl=document.getElementById('wheel');
+    const spinBtn=document.getElementById('spinBtn');
+    const numbersEl=document.getElementById('numbers');
+    const chipsEl=document.getElementById('chips');
+
+    let bank=1000, chipValue=25, currentBet=null, rotation=0;
+
+    rouletteOrder.forEach(n=>{
+      const d=document.createElement('div');
+      d.className='num ' + (n===0 ? 'green' : redNums.has(n) ? 'red' : 'black');
+      d.textContent=n;
+      numbersEl.appendChild(d);
+    });
+
+    [10,25,50,100].forEach(v=>{
+      const b=document.createElement('button');
+      b.className='chip'+(v===chipValue?' active':'');
+      b.textContent='$'+v;
+      b.onclick=()=>{
+        chipValue=v;
+        [...chipsEl.children].forEach(x=>x.classList.remove('active'));
+        b.classList.add('active');
+        if(currentBet) resultEl.textContent=`Bet selected: ${currentBet.toUpperCase()} for $${chipValue}`;
+      };
+      chipsEl.appendChild(b);
+    });
+
+    document.querySelectorAll('[data-bet]').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        currentBet=btn.dataset.bet;
+        document.querySelectorAll('[data-bet]').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        resultEl.textContent=`Bet selected: ${currentBet.toUpperCase()} for $${chipValue}`;
+      });
+    });
+
+    function getColor(n){
+      return n===0 ? 'green' : redNums.has(n) ? 'red' : 'black';
+    }
+
+    spinBtn.addEventListener('click',()=>{
+      if(!currentBet){
+        resultEl.textContent='Choose a bet first.';
+        return;
+      }
+      if(bank<chipValue){
+        resultEl.textContent='Not enough bankroll for that chip.';
+        return;
+      }
+
+      bank-=chipValue;
+      bankEl.textContent='$'+bank;
+      spinBtn.disabled=true;
+
+      const index=Math.floor(Math.random()*rouletteOrder.length);
+      const winningNumber=rouletteOrder[index];
+      const slice=360/rouletteOrder.length;
+      const target=360-(index*slice)-slice/2;
+
+      rotation+=2160+target;
+      wheelEl.style.transform=`rotate(${rotation}deg)`;
+
+      setTimeout(()=>{
+        const color=getColor(winningNumber);
+        let win=0;
+
+        if(currentBet===color){
+          win=currentBet==='green' ? chipValue*14 : chipValue*2;
+        }
+
+        bank+=win;
+        bankEl.textContent='$'+bank;
+        resultEl.textContent=`Winning pocket: ${winningNumber} (${color.toUpperCase()})`;
+        logEl.textContent=win
+          ? `You won $${win-chipValue} profit on a $${chipValue} bet.`
+          : `No win this spin. You lost $${chipValue}.`;
+
+        spinBtn.disabled=false;
+      },5200);
+    });
+  </script>
+</body>
+</html>
