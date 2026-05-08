@@ -557,12 +557,23 @@
 
     function bettingRoundComplete() {
       const contenders = playersInHand().filter(p => !p.folded);
+      const active = contenders.filter(p => !p.allIn && p.chips > 0);
+      
       if (contenders.length <= 1) return true;
-      return contenders.every(p => p.allIn || p.currentBet === state.currentBet);
+      if (active.length === 0) return true;
+
+      const allMatched = active.every(p => p.currentBet === state.currentBet);
+      const allActed = active.every(p => p.actedThisStreet);
+        
+      return allMatched && allActed;
     }
 
     function resetBetsForStreet() {
-      state.players.forEach(p => p.currentBet = 0);
+      state.players.forEach(p => {
+        p.currentBet = 0);
+        p.actedThisStreet = false;
+        p.lastAction = '';
+      });
       state.currentBet = 0;
       state.minRaise = state.bigBlind;
     }
